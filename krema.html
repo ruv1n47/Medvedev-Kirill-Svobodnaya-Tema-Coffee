@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Крема — кофейня с 3D-чашкой</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#150d08;--card:rgba(40,26,18,.72);--fg:#fbf1e4;--mut:#c9b29a;--ac:#f0a35e;--ac2:#ffd7a8;--line:#ffffff1c}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;color:var(--fg);font-family:Inter,system-ui,sans-serif;background:radial-gradient(900px 600px at 70% 10%,#4a2a17 0%,transparent 70%),radial-gradient(700px 500px at 0% 100%,#2d1a10 0%,transparent 70%),var(--bg);background-attachment:fixed}
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;background:linear-gradient(#150d08cc,transparent)}
+.logo{font:800 24px 'Playfair Display',serif;color:var(--ac2);text-decoration:none}
+.nl{display:flex;gap:20px;align-items:center}
+.nl a{color:var(--mut);text-decoration:none;font-size:14px;font-weight:500}
+.cart{background:var(--ac);color:#2a1508 !important;padding:9px 16px;border-radius:99px;font-weight:600 !important}
+.cart.bump{animation:bump .4s}
+@keyframes bump{50%{transform:scale(1.25)}}
+section{position:relative;z-index:2;padding:110px 22px 40px;max-width:1100px;margin:0 auto}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.tag{font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--ac)}
+h1,h2{font-family:'Playfair Display',serif;margin:10px 0 14px;line-height:1.05}
+h1{font-size:clamp(44px,8vw,92px);font-weight:800}
+h1 em{font-style:italic;color:var(--ac)}
+h2{font-size:clamp(30px,5vw,48px);font-weight:800}
+.lead{max-width:420px;color:var(--mut);line-height:1.65;font-size:17px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{font:600 15px Inter,sans-serif;border:0;border-radius:99px;padding:15px 26px;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .2s}
+.btn:active{transform:scale(.95)}
+.pri{background:linear-gradient(90deg,var(--ac),var(--ac2));color:#2a1508}
+.sec{background:transparent;color:var(--fg);border:1px solid #ffffff44}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:24px}
+.item{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:22px;padding:20px;cursor:pointer;transition:transform .25s,border-color .25s}
+.item:hover{transform:translateY(-4px)}
+.item.on{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac) inset}
+.row{display:flex;align-items:center;gap:12px}
+.sw{width:38px;height:38px;border-radius:50%;flex:none;border:3px solid #ffffff33}
+.item h3{margin:0;font:600 18px Inter,sans-serif}
+.item p{color:var(--mut);font-size:14px;line-height:1.5;margin:12px 0 16px;min-height:42px}
+.bot{display:flex;justify-content:space-between;align-items:center}
+.price{font:800 20px 'Playfair Display',serif;color:var(--ac2)}
+.add{background:var(--ac);color:#2a1508;border:0;border-radius:99px;padding:10px 18px;font:600 14px Inter,sans-serif;cursor:pointer}
+.panel{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:26px;padding:24px;margin-top:24px;max-width:560px}
+.line{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);gap:10px}
+.q{display:flex;align-items:center;gap:10px}
+.q button{width:30px;height:30px;border-radius:50%;border:1px solid #ffffff44;background:none;color:var(--fg);font-size:16px;cursor:pointer}
+.tot{display:flex;justify-content:space-between;font:800 24px 'Playfair Display',serif;margin:18px 0}
+.empty,.done{color:var(--mut);line-height:1.6}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:20px}
+.info div{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.info b{display:block;color:var(--ac);font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px}
+footer{position:relative;z-index:2;text-align:center;color:var(--mut);font-size:13px;padding:40px 22px 60px}
+.mq{position:relative;z-index:2;overflow:hidden;background:var(--ac);color:#2a1508;transform:rotate(-1.5deg);margin:30px -10px;padding:14px 0;white-space:nowrap}
+.mq div{display:inline-block;animation:mq 30s linear infinite;font:800 22px 'Playfair Display',serif;letter-spacing:.08em}
+.mq:hover div{animation-play-state:paused}
+.mq span{padding:0 22px}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.mq div{animation:none}}
+.stats4{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin:26px 0}
+.stats4 div{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:center}
+.stats4 b{display:block;font:800 34px 'Playfair Display',serif;color:var(--ac2)}
+.stats4 span{font-size:13px;color:var(--mut)}
+.info p{margin:0;color:var(--mut);line-height:1.55;font-size:14px}
+.info h3{margin:0 0 8px;font:600 17px Inter,sans-serif}
+.steps{counter-reset:s}
+.steps div{position:relative;padding-left:56px}
+.steps div:before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:var(--ac);color:#2a1508;font-weight:600;display:flex;align-items:center;justify-content:center}
+.rev{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:24px}
+.rev figure{margin:0;background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:22px;padding:22px}
+.rev .st{color:var(--ac);letter-spacing:.15em;font-size:16px}
+.rev blockquote{margin:10px 0 14px;color:var(--fg);line-height:1.6;font-size:15px}
+.rev figcaption{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:13px}
+.av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#8a4b22);display:flex;align-items:center;justify-content:center;color:#2a1508;font-weight:600}
+details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-top:12px;max-width:700px}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--mut);line-height:1.6;margin:10px 0 0}
+@media(max-width:700px){.nl a:not(.cart){display:none}#hero{justify-content:flex-end;padding-bottom:50px}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<nav>
+  <a class="logo" href="#hero">Крема</a>
+  <div class="nl"><a href="#about">О нас</a><a href="#menu">Меню</a><a href="#reviews">Отзывы</a><a href="#contacts">Контакты</a><a href="#order" class="cart" id="cart">Заказ · <span id="cnt">0</span></a></div>
+</nav>
+
+<section id="hero">
+  <div class="tag">Кофейня · обжарка · десерты</div>
+  <h1>Кофе, в&nbsp;котором <em>есть душа</em></h1>
+  <p class="lead">Зёрна из Эфиопии и Колумбии, обжарка каждую неделю и бариста, которые знают ваш любимый напиток. Выбирайте вкус и смотрите, как меняется чашка.</p>
+  <div class="btns"><a class="btn pri" href="#menu">Смотреть меню</a><a class="btn sec" href="#contacts">Как нас найти</a></div>
+</section>
+
+<div class="mq" aria-hidden="true"><div id="mqin"><span>ЭСПРЕССО</span><span>✦</span><span>СВЕЖАЯ ОБЖАРКА КАЖДУЮ НЕДЕЛЮ</span><span>✦</span><span>КАПУЧИНО</span><span>✦</span><span>БЕСПЛАТНЫЙ WI-FI</span><span>✦</span><span>МАТЧА-ЛАТТЕ</span><span>✦</span><span>КОФЕ С СОБОЙ — СКИДКА 10%</span><span>✦</span><span>ГОРЯЧИЙ ШОКОЛАД</span><span>✦</span></div></div>
+
+<section id="about">
+  <div class="tag">О нас</div>
+  <h2>Больше, чем просто кофе</h2>
+  <p class="lead" style="max-width:620px">«Крема» открылась в 2019 году как маленький киоск на три столика. Сегодня это уютное место, где работают, читают, назначают встречи и просто отдыхают от суеты. Мы сами выбираем фермы, сами жарим зерно и сами учим бариста.</p>
+  <div class="stats4">
+    <div><b data-n="7">0</b><span>лет работаем</span></div>
+    <div><b data-n="12">0</b><span>сортов зёрен</span></div>
+    <div><b data-n="48000">0</b><span>чашек в год</span></div>
+    <div><b data-n="4">0</b><span>страны-поставщика</span></div>
+  </div>
+  <div class="info">
+    <div><h3>Зёрна с ферм</h3><p>Работаем напрямую с небольшими фермами в Эфиопии, Колумбии, Бразилии и Кении. Каждая партия проходит дегустацию.</p></div>
+    <div><h3>Своя обжарка</h3><p>Обжариваем небольшими партиями раз в неделю. Вы пьёте кофе, которому не больше десяти дней.</p></div>
+    <div><h3>Заботливые бариста</h3><p>Каждый бариста проходит обучение у нас два месяца и знает, как приготовить кофе именно под ваш вкус.</p></div>
+  </div>
+  <h2 style="font-size:30px;margin-top:40px">Как мы готовим ваш напиток</h2>
+  <div class="info steps">
+    <div><h3>Помол</h3><p>Зёрна мелем прямо перед приготовлением, чтобы сохранить аромат.</p></div>
+    <div><h3>Экстракция</h3><p>Горячая вода под давлением 9 атмосфер за 25–30 секунд даёт насыщенный эспрессо.</p></div>
+    <div><h3>Молоко</h3><p>Взбиваем до шёлковой текстуры при температуре около 60 °C.</p></div>
+    <div><h3>Подача</h3><p>Подаём в тёплой чашке, чтобы напиток дольше оставался горячим.</p></div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="tag">Меню</div>
+  <h2>Выбери напиток</h2>
+  <p class="lead">Нажми на карточку — чашка справа вверху станет такого же цвета.</p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="order">
+  <div class="tag">Ваш заказ</div>
+  <h2>Почти готово</h2>
+  <div class="panel" id="panel"></div>
+</section>
+
+<section id="reviews">
+  <div class="tag">Отзывы</div>
+  <h2>Что говорят гости</h2>
+  <div class="rev">
+    <figure><div class="st">★★★★★</div><blockquote>Лучший капучино в районе! Пенка бархатная, кофе без горечи. Хожу каждое утро перед работой.</blockquote><figcaption><span class="av">А</span>Анна, дизайнер</figcaption></figure>
+    <figure><div class="st">★★★★★</div><blockquote>Очень уютно и тихо, можно спокойно поработать с ноутбуком. Wi-Fi быстрый, розетки у каждого столика.</blockquote><figcaption><span class="av">М</span>Максим, программист</figcaption></figure>
+    <figure><div class="st">★★★★★</div><blockquote>Раф с ванилью просто мечта. Дети в восторге от горячего шоколада, а мне нравится, что здесь всегда дружелюбно.</blockquote><figcaption><span class="av">О</span>Ольга, мама двоих детей</figcaption></figure>
+    <figure><div class="st">★★★★☆</div><blockquote>Матча-латте очень вкусный, не пересладкий. Хотелось бы побольше десертов, но кофе на высоте.</blockquote><figcaption><span class="av">Д</span>Дмитрий, студент</figcaption></figure>
+  </div>
+  <h2 style="font-size:30px;margin-top:44px">Частые вопросы</h2>
+  <details><summary>Можно ли заказать кофе с собой?</summary><p>Да, готовим в стаканах с крышкой. На кофе с собой действует скидка 10%.</p></details>
+  <details><summary>Есть ли напитки на растительном молоке?</summary><p>Конечно: овсяное, миндальное и кокосовое молоко за небольшую доплату.</p></details>
+  <details><summary>Можно ли прийти с ноутбуком или с питомцем?</summary><p>С ноутбуком, пожалуйста, у нас есть Wi-Fi и розетки. С небольшими собаками тоже рады, если они спокойные.</p></details>
+  <details><summary>Продаёте ли вы зёрна?</summary><p>Да, зёрна нашей обжарки можно купить упаковками по 250 г и 1 кг, мы смелем их под вашу кофемашину.</p></details>
+</section>
+
+<section id="contacts">
+  <div class="tag">Контакты</div>
+  <h2>Ждём в гости</h2>
+  <div class="info">
+    <div><b>Адрес</b>ул. Кофейная, 12<br>рядом с парком</div>
+    <div><b>Часы работы</b>Ежедневно<br>с 8:00 до 22:00</div>
+    <div><b>Телефон</b>+7 (900) 123-45-67<br>hello@krema.cafe</div>
+  </div>
+</section>
+<footer>© 2026 Крема. Учебный проект.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+var drinks=[
+ {id:0,n:'Эспрессо',d:'Крепкий и насыщенный, с плотной золотистой пенкой.',p:150,c:'#3a1c0d'},
+ {id:1,n:'Капучино',d:'Эспрессо, бархатное молоко и воздушная пенка.',p:250,c:'#b07a4a'},
+ {id:2,n:'Латте',d:'Нежный и мягкий, много молока, чуть сладости.',p:280,c:'#d4a97a'},
+ {id:3,n:'Раф ванильный',d:'Сливки, ваниль и эспрессо. Десерт в чашке.',p:320,c:'#e6cba6'},
+ {id:4,n:'Матча-латте',d:'Японский зелёный чай с тёплым молоком.',p:330,c:'#8db56b'},
+ {id:5,n:'Горячий шоколад',d:'Густой, тёмный, со щепоткой морской соли.',p:290,c:'#5c2e1b'}
+];
+var cart={};
+
+/* ---------- UI ---------- */
+var grid=document.getElementById('grid'),panel=document.getElementById('panel'),cnt=document.getElementById('cnt'),cartBtn=document.getElementById('cart');
+function rub(n){return n+' ₽';}
+function renderMenu(){
+  grid.innerHTML=drinks.map(function(x){return '<div class="item'+(x.id===cur?' on':'')+'" data-id="'+x.id+'"><div class="row"><div class="sw" style="background:'+x.c+'"></div><h3>'+x.n+'</h3></div><p>'+x.d+'</p><div class="bot"><span class="price">'+rub(x.p)+'</span><button class="add" data-add="'+x.id+'">В заказ</button></div></div>';}).join('');
+}
+function renderCart(){
+  var ids=Object.keys(cart),sum=0,n=0;
+  ids.forEach(function(i){sum+=drinks[i].p*cart[i];n+=cart[i];});
+  cnt.textContent=n;
+  if(!ids.length){panel.innerHTML='<div class="empty">Пока пусто. Добавьте напитки из меню — и мы сразу начнём готовить.</div>';return;}
+  panel.innerHTML=ids.map(function(i){var x=drinks[i];return '<div class="line"><span>'+x.n+'</span><span class="q"><button data-m="'+i+'">−</button>'+cart[i]+'<button data-p="'+i+'">+</button></span><b>'+rub(x.p*cart[i])+'</b></div>';}).join('')+'<div class="tot"><span>Итого</span><span>'+rub(sum)+'</span></div><button class="btn pri" id="go" style="width:100%">Оформить заказ</button>';
+}
+var cur=1;
+grid.addEventListener('click',function(e){
+  var a=e.target.closest('[data-add]');
+  if(a){var i=a.dataset.add;cart[i]=(cart[i]||0)+1;renderCart();cartBtn.classList.remove('bump');void cartBtn.offsetWidth;cartBtn.classList.add('bump');return;}
+  var c=e.target.closest('.item');
+  if(c){cur=+c.dataset.id;setLiquid(drinks[cur].c);[].forEach.call(grid.children,function(el){el.classList.toggle('on',+el.dataset.id===cur);});}
+});
+panel.addEventListener('click',function(e){
+  var m=e.target.dataset.m,p=e.target.dataset.p;
+  if(m){cart[m]--;if(cart[m]<=0)delete cart[m];renderCart();}
+  if(p){cart[p]++;renderCart();}
+  if(e.target.id==='go'){
+    var num=Math.floor(100+Math.random()*900);cart={};renderCart();cnt.textContent=0;
+    panel.innerHTML='<div class="done"><h2 style="font-size:28px;margin-top:0">Спасибо!</h2>Заказ №'+num+' принят. Бариста уже начал готовить, это займёт около 7 минут. Приятного кофе!</div>';
+  }
+});
+renderMenu();renderCart();
+var mq=document.getElementById('mqin');mq.innerHTML+=mq.innerHTML;
+var cio=new IntersectionObserver(function(es){es.forEach(function(e){
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  var el=e.target,n=+el.dataset.n,t0=performance.now();
+  (function f(t){var k=Math.min(1,(t-t0)/1400);el.textContent=Math.round(n*(1-Math.pow(1-k,3))).toLocaleString('ru-RU');if(k<1)requestAnimationFrame(f);})(t0);
+});},{threshold:.6});
+document.querySelectorAll('[data-n]').forEach(function(el){cio.observe(el);});
+
+/* ---------- 3D ---------- */
+var cv=document.getElementById('c');
+var R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+R.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+var S=new THREE.Scene();
+var cam=new THREE.PerspectiveCamera(40,1,0.1,100);cam.position.set(0,2.2,9);cam.lookAt(0,0.3,0);
+var mobile=false;
+function rs(){R.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();mobile=innerWidth<700;}
+addEventListener('resize',rs);rs();
+
+S.add(new THREE.AmbientLight(0xffe2c4,.7));
+var key=new THREE.DirectionalLight(0xfff0dd,1.5);key.position.set(3,5,4);S.add(key);
+var rim=new THREE.PointLight(0xff9a4d,1.2,20);rim.position.set(-4,2,-2);S.add(rim);
+
+var cup=new THREE.Group();
+var body=new THREE.Mesh(new THREE.LatheGeometry([[0,0],[.55,0],[.75,.1],[1,.7],[1.1,1.5],[1.12,1.6],[1.03,1.6],[.97,1.45],[.85,.78],[.5,.22],[0,.18]].map(function(a){return new THREE.Vector2(a[0],a[1]);}),64),new THREE.MeshStandardMaterial({color:0xfffaf3,roughness:.25,metalness:.05,side:THREE.DoubleSide}));
+body.position.y=.1;cup.add(body);
+var saucer=new THREE.Mesh(new THREE.LatheGeometry([[0,0],[1.2,0],[1.7,.12],[1.82,.22],[1.72,.22],[1.2,.09],[0,.09]].map(function(a){return new THREE.Vector2(a[0],a[1]);}),64),new THREE.MeshStandardMaterial({color:0xf4ead9,roughness:.3,side:THREE.DoubleSide}));
+cup.add(saucer);
+var handle=new THREE.Mesh(new THREE.TorusGeometry(.45,.09,16,32,Math.PI),new THREE.MeshStandardMaterial({color:0xfffaf3,roughness:.25}));
+handle.rotation.z=-Math.PI/2;handle.position.set(1.08,1.0,0);cup.add(handle);
+var liq=new THREE.Mesh(new THREE.CircleGeometry(.94,48),new THREE.MeshStandardMaterial({color:drinks[1].c,roughness:.35}));
+liq.rotation.x=-Math.PI/2;liq.position.y=1.38;cup.add(liq);
+cup.position.y=-.8;
+var holder=new THREE.Group();holder.add(cup);S.add(holder);
+var target=new THREE.Color(drinks[1].c);
+function setLiquid(h){target.set(h);}
+
+// steam
+function puff(){
+  var c=document.createElement('canvas');c.width=c.height=64;var g=c.getContext('2d');
+  var r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,'rgba(255,255,255,.5)');r.addColorStop(1,'rgba(255,255,255,0)');
+  g.fillStyle=r;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c);
+}
+var pt=puff(),steam=[];
+for(var i=0;i<22;i++){
+  var s=new THREE.Sprite(new THREE.SpriteMaterial({map:pt,transparent:true,depthWrite:false,opacity:0}));
+  s.userData={o:i/22,x:(Math.random()-.5)*.6,z:(Math.random()-.5)*.6,sp:.18+Math.random()*.1};
+  cup.add(s);steam.push(s);
+}
+
+// beans
+var beans=new THREE.Group(),bg=new THREE.SphereGeometry(1,16,12),bm=new THREE.MeshStandardMaterial({color:0x4a2a17,roughness:.5});
+for(var b=0;b<18;b++){
+  var m=new THREE.Mesh(bg,bm);m.scale.set(.16,.1,.11);
+  m.userData={a:Math.random()*6.28,r:2.4+Math.random()*1.4,y:-1+Math.random()*3.2,s:.15+Math.random()*.25,ph:Math.random()*6};
+  beans.add(m);
+}
+holder.add(beans);
+
+var mx=0,my=0;
+addEventListener('pointermove',function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;});
+var pos=new THREE.Vector3(),sc=1,clock=new THREE.Clock();
+function loop(){
+  var t=clock.getElapsedTime(),hero=scrollY<innerHeight*.55;
+  var tx,ty,ts;
+  if(hero){tx=mobile?0:2.2;ty=mobile?1.2:0;ts=mobile?.72:1.05;}
+  else{tx=mobile?1.0:4.3;ty=mobile?2.5:2.5;ts=mobile?.3:.42;}
+  pos.x+=(tx-pos.x)*.07;pos.y+=(ty-pos.y)*.07;sc+=(ts-sc)*.07;
+  holder.position.set(pos.x,pos.y,0);holder.scale.setScalar(sc);
+  cup.rotation.y=t*.35+scrollY*.004+mx*1.2;
+  cup.rotation.x=.12+my*.3;
+  cup.position.y=-.8+Math.sin(t*1.2)*.06;
+  liq.material.color.lerp(target,.08);
+  steam.forEach(function(s){
+    var u=((t*s.userData.sp+s.userData.o)%1);
+    s.position.set(s.userData.x+Math.sin(u*6+s.userData.o*9)*.25,1.5+u*2.4,s.userData.z);
+    s.scale.setScalar(.5+u*1.3);
+    s.material.opacity=Math.sin(u*Math.PI)*.45;
+  });
+  beans.children.forEach(function(m){
+    var d=m.userData,a=d.a+t*d.s;
+    m.position.set(Math.cos(a)*d.r,d.y+Math.sin(t+d.ph)*.25,Math.sin(a)*d.r);
+    m.rotation.set(t*d.s*2,a,d.ph);
+  });
+  R.render(S,cam);
+  requestAnimationFrame(loop);
+}
+loop();
+})();
+</script>
+</body>
+</html>
